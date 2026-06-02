@@ -122,13 +122,18 @@ function createDownloadLink(blob,encoding) {
 	var url = URL.createObjectURL(blob);
 	var au = document.createElement('audio');
 	var li = document.createElement('li');
+	var link = document.createElement('a');
 
 	//add controls to the <audio> element
 	au.controls = true;
 	au.src = url;
 
-	// add the audio element to the li element (no download link shown)
+	//link the a element to the blob
+	link.href = url;
+
+	//add the new audio and a elements to the li element
 	li.appendChild(au);
+	li.appendChild(link);
 
 	// add a delete button so user can remove recordings
 	var deleteBtn = document.createElement('button');
