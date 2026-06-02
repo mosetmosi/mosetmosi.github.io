@@ -83,6 +83,20 @@
         consentDecline.addEventListener('click', declineConsent);
     }
 
+    // Wire a send button (if present) to open consent and set pendingSend
+    const sendButton = document.getElementById('sendButton');
+    if (sendButton) {
+        sendButton.addEventListener('click', () => {
+            // prepare pendingSend for the consent dialog flow
+            pendingSend = {
+                button: sendButton,
+                status: recordStatus || { textContent: '' },
+                type: 'audio'
+            };
+            openConsent();
+        });
+    }
+
     const updateStatus = (text, isError = false) => {
         recordStatus.textContent = text;
         recordStatus.classList.toggle('text-danger', isError);
