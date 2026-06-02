@@ -73,7 +73,7 @@ function startRecording() {
 
         recorder.onComplete = function(recorder, blob) { 
 			__log("Encoding complete");
-			createDownloadLink(blob,recorder.encoding);
+			
 		// completed
 		}
 
