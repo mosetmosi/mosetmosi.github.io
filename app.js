@@ -105,7 +105,7 @@ function startRecording() {
 		try {
 			recorder.startRecording();
 			isRecording = true;
-			if (recordToggle) recordToggle.textContent = "Recordning...";
+			if (recordToggle) recordToggle.textContent ="Spelar in...";
 			__log("Recording started");
 		} catch (err) {
 			__log('Failed to start recorder: ' + err);
