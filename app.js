@@ -4,14 +4,13 @@ URL = window.URL || window.webkitURL;
 var gumStream; 						//stream from getUserMedia()
 var recorder; 						//WebAudioRecorder object
 var input; 							//MediaStreamAudioSourceNode  we'll be recording
-var encodingType; 					//holds selected encoding for resulting audio (file)
+var encodingType = 'wav';
 var encodeAfterRecord = true;       // when to encode
 
 // shim for AudioContext when it's not avb. 
 var AudioContext = window.AudioContext || window.webkitAudioContext;
 var audioContext; //new audio context to help us record
 
-var encodingTypeSelect = document.getElementById("encodingTypeSelect");
 var recordButton = document.getElementById("recordButton");
 var stopButton = document.getElementById("stopButton");
 
@@ -45,8 +44,8 @@ function startRecording() {
 		*/
 		audioContext = new AudioContext();
 
-		//update the format 
-		document.getElementById("formats").innerHTML="Format: 2 channel "+encodingTypeSelect.options[encodingTypeSelect.selectedIndex].value+" @ "+audioContext.sampleRate/1000+"kHz"
+		//update the format (forced to WAV)
+		document.getElementById("formats").innerHTML="Format: 2 channel "+encodingType+" @ "+audioContext.sampleRate/1000+"kHz"
 
 		//assign to gumStream for later use
 		gumStream = stream;
@@ -57,11 +56,7 @@ function startRecording() {
 		//stop the input from playing back through the speakers
 		//input.connect(audioContext.destination)
 
-		//get the encoding 
-		encodingType = encodingTypeSelect.options[encodingTypeSelect.selectedIndex].value;
-		
-		//disable the encoding selector
-		encodingTypeSelect.disabled = true;
+		// encodingType is forced to 'wav'
 
 		recorder = new WebAudioRecorder(input, {
 		  workerDir: './', // must end with slash and point to current root location
@@ -77,10 +72,10 @@ function startRecording() {
 		  }
 		});
 
-		recorder.onComplete = function(recorder, blob) { 
+        recorder.onComplete = function(recorder, blob) { 
 			__log("Encoding complete");
 			createDownloadLink(blob,recorder.encoding);
-			encodingTypeSelect.disabled = false;
+		// completed
 		}
 
 		recorder.setOptions({
