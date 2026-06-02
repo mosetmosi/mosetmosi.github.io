@@ -54,11 +54,6 @@ function startRecording() {
 
 		*/
 		audioContext = new AudioContext();
-+		if (audioContext.state === 'suspended' && typeof audioContext.resume === 'function') {
-+			audioContext.resume().catch(function(err) {
-+				console.warn('AudioContext resume failed:', err);
-+			});
-+		}
 
 		// formats display removed (no-op)
 
