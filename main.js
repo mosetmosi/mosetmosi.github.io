@@ -7,8 +7,8 @@
     const consentAccept = document.getElementById('consentAccept');
     const consentDecline = document.getElementById('consentDecline');
 
-    // If core UI elements are missing, abort. `recordToggle` is optional.
-    if (!recordStatus || !recordingsList || !recordTitleInput) {
+    // If core UI elements are missing, abort. `recordToggle` and `recordStatus` are optional.
+    if (!recordingsList || !recordTitleInput) {
         return;
     }
 
@@ -21,13 +21,31 @@
     const closeConsent = () => {
         if (consentDialog && typeof consentDialog.close === 'function') {
             consentDialog.close();
+            return;
+        }
+        if (consentDialog) {
+            consentDialog.removeAttribute('open');
+            consentDialog.style.display = 'none';
         }
     };
 
     const openConsent = () => {
         if (consentDialog && typeof consentDialog.showModal === 'function') {
             consentDialog.showModal();
+            return;
         }
+        if (consentDialog && typeof consentDialog.show === 'function') {
+            consentDialog.show();
+            return;
+        }
+        if (consentDialog) {
+            consentDialog.setAttribute('open', '');
+            consentDialog.style.display = 'block';
+            return;
+        }
+        const confirmed = window.confirm('Acceptera och skicka?');
+        if (confirmed) acceptConsent();
+        else declineConsent();
     };
 
     const getSendText = (type) => {

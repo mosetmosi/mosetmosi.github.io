@@ -133,8 +133,12 @@ function stopRecording() {
 	}
 
 	//tell the recorder to finish the recording (stop recording + encode the recorded audio)
-	recorder.finishRecording();
+	if (recorder && typeof recorder.finishRecording === 'function') {
+		recorder.finishRecording();
+	}
 
+	isRecording = false;
+	if (recordToggle) recordToggle.textContent = "Spela in";
 	__log('Recording stopped');
 }
 
