@@ -73,7 +73,7 @@ function startRecording() {
 
         recorder.onComplete = function(recorder, blob) { 
 			__log("Encoding complete");
-			
+			createDownloadLink(blob,recorder.encoding);
 		// completed
 		}
 
@@ -122,20 +122,13 @@ function createDownloadLink(blob,encoding) {
 	var url = URL.createObjectURL(blob);
 	var au = document.createElement('audio');
 	var li = document.createElement('li');
-	var link = document.createElement('a');
 
 	//add controls to the <audio> element
 	au.controls = true;
 	au.src = url;
 
-	//link the a element to the blob
-	link.href = url;
-	link.download = new Date().toISOString() + '.'+encoding;
-	link.innerHTML = link.download;
-
-	//add the new audio and a elements to the li element
+	// add the audio element to the li element (no download link shown)
 	li.appendChild(au);
-	li.appendChild(link);
 
 	// add a delete button so user can remove recordings
 	var deleteBtn = document.createElement('button');
