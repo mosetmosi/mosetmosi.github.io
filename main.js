@@ -7,7 +7,8 @@
     const consentAccept = document.getElementById('consentAccept');
     const consentDecline = document.getElementById('consentDecline');
 
-    if (!recordToggle || !recordStatus || !recordingsList || !recordTitleInput) {
+    // If core UI elements are missing, abort. `recordToggle` is optional.
+    if (!recordStatus || !recordingsList || !recordTitleInput) {
         return;
     }
 
