@@ -44,8 +44,7 @@ function startRecording() {
 		*/
 		audioContext = new AudioContext();
 
-		//update the format (forced to WAV)
-		document.getElementById("formats").innerHTML="Format: 2 channel "+encodingType+" @ "+audioContext.sampleRate/1000+"kHz"
+		// formats display removed (no-op)
 
 		//assign to gumStream for later use
 		gumStream = stream;
@@ -138,13 +137,23 @@ function createDownloadLink(blob,encoding) {
 	li.appendChild(au);
 	li.appendChild(link);
 
-	//add the li element to the ordered list
-	recordingsList.appendChild(li);
+	//add the li element to the ordered list (safe lookup)
+	var list = document.getElementById('recordingsList');
+	if (list) {
+		list.appendChild(li);
+	} else {
+		document.body.appendChild(li);
+	}
 }
 
 
 
 //helper function
 function __log(e, data) {
-	log.innerHTML += "\n" + e + " " + (data || '');
+	var logEl = document.getElementById('log');
+	if (logEl) {
+		logEl.innerHTML += "\n" + e + " " + (data || '');
+	} else {
+		console.log(e, data || '');
+	}
 }
