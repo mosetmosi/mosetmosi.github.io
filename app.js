@@ -130,23 +130,12 @@ function createDownloadLink(blob,encoding) {
 
 	//link the a element to the blob
 	link.href = url;
+	link.download = new Date().toISOString() + '.'+encoding;
+	link.innerHTML = link.download;
 
 	//add the new audio and a elements to the li element
 	li.appendChild(au);
 	li.appendChild(link);
-
-	// add a delete button so user can remove recordings
-	var deleteBtn = document.createElement('button');
-	deleteBtn.type = 'button';
-	deleteBtn.className = 'btn btn-sm btn-outline-danger ms-2';
-	deleteBtn.textContent = 'Ta bort';
-	deleteBtn.addEventListener('click', function() {
-		try {
-			URL.revokeObjectURL(url);
-		} catch (e) {}
-		if (li && li.parentNode) li.parentNode.removeChild(li);
-	});
-	li.appendChild(deleteBtn);
 
 	//add the li element to the ordered list (safe lookup)
 	var list = document.getElementById('recordingsList');
