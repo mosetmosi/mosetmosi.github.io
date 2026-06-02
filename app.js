@@ -11,12 +11,23 @@ var encodeAfterRecord = true;       // when to encode
 var AudioContext = window.AudioContext || window.webkitAudioContext;
 var audioContext; //new audio context to help us record
 
-var recordButton = document.getElementById("recordButton");
-var stopButton = document.getElementById("stopButton");
+var recordToggle = document.getElementById("recordToggle");
+var isRecording = false;
 
-//add events to those 2 buttons
-recordButton.addEventListener("click", startRecording);
-stopButton.addEventListener("click", stopRecording);
+// add toggle event
+if (recordToggle) {
+	recordToggle.addEventListener("click", toggleRecording);
+} else {
+	console.warn('recordToggle not found in DOM');
+}
+
+function toggleRecording() {
+	if (isRecording) {
+		stopRecording();
+	} else {
+		startRecording();
+	}
+}
 
 function startRecording() {
 	console.log("startRecording() called");
@@ -74,7 +85,8 @@ function startRecording() {
         recorder.onComplete = function(recorder, blob) { 
 			__log("Encoding complete");
 			createDownloadLink(blob,recorder.encoding);
-		// completed
+			isRecording = false;
+			if (recordToggle) recordToggle.textContent = "Spela in";
 		}
 
 		recorder.setOptions({
@@ -85,32 +97,36 @@ function startRecording() {
 	    });
 
 		//start the recording process
-		recorder.startRecording();
-
-		 __log("Recording started");
+		try {
+			recorder.startRecording();
+			isRecording = true;
+			if (recordToggle) recordToggle.textContent = "Recordning...";
+			__log("Recording started");
+		} catch (err) {
+			__log('Failed to start recorder: ' + err);
+			console.error(err);
+		}
 
 	}).catch(function(err) {
-	  	//enable the record button if getUSerMedia() fails
-    	recordButton.disabled = false;
-    	stopButton.disabled = true;
+	  	//enable the record button if getUserMedia() fails
+		__log('getUserMedia() error: ' + err);
+		console.error(err);
+		isRecording = false;
+		if (recordToggle) recordToggle.textContent = "Spela in";
 
 	});
-
-	//disable the record button
-    recordButton.disabled = true;
-    stopButton.disabled = false;
 }
 
 function stopRecording() {
 	console.log("stopRecording() called");
 	
 	//stop microphone access
-	gumStream.getAudioTracks()[0].stop();
+	if (gumStream && gumStream.getAudioTracks && gumStream.getAudioTracks().length) {
+		gumStream.getAudioTracks()[0].stop();
+	} else {
+		console.warn('No gumStream available to stop');
+	}
 
-	//disable the stop button
-	stopButton.disabled = true;
-	recordButton.disabled = false;
-	
 	//tell the recorder to finish the recording (stop recording + encode the recorded audio)
 	recorder.finishRecording();
 
